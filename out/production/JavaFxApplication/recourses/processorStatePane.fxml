@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="769.0" style="-fx-background-color: #808080;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProcessorStateController">
+   <children>
+      <Text fill="WHITE" layoutX="517.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Процессор" wrappingWidth="136.13671875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="processorText" layoutX="515.0" layoutY="75.0" prefHeight="25.0" prefWidth="220.0" />
+      <Text fill="WHITE" layoutX="517.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MMX" wrappingWidth="136.13671875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="mmxText" layoutX="515.0" layoutY="141.0" prefHeight="25.0" prefWidth="220.0" />
+      <Text fill="WHITE" layoutX="517.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Производитель" wrappingWidth="136.13671875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="manufacturerText" layoutX="515.0" layoutY="214.0" prefHeight="25.0" prefWidth="220.0" />
+      <Text fill="WHITE" layoutX="517.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Тактовая частота" wrappingWidth="150.13671875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="freqText" layoutX="515.0" layoutY="290.0" prefHeight="25.0" prefWidth="220.0" />
+      <Button fx:id="backButton" layoutX="275.0" layoutY="344.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" style="-fx-background-color: #FF6347;" text="Назад">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
