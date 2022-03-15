@@ -13,14 +13,14 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField layoutX="515.0" layoutY="75.0" prefHeight="25.0" prefWidth="220.0" />
+      <TextField fx:id="allSwap" layoutX="515.0" layoutY="75.0" prefHeight="25.0" prefWidth="220.0" />
       <Text fill="WHITE" layoutX="515.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Занято в файле подкачки:" wrappingWidth="220.0000026077032">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField layoutX="515.0" layoutY="141.0" prefHeight="25.0" prefWidth="220.0" />
-      <Button fx:id="signInButton" layoutX="515.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" style="-fx-background-color: #FF6347;" text="Загрузить файл подкачки">
+      <TextField fx:id="usedSwap" layoutX="515.0" layoutY="141.0" prefHeight="25.0" prefWidth="220.0" />
+      <Button fx:id="swapButton" layoutX="515.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" style="-fx-background-color: #FF6347;" text="Загрузить файл подкачки">
          <font>
             <Font size="14.0" />
          </font>

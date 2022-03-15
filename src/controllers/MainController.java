@@ -3,6 +3,11 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 public class MainController implements ToPane{
 
     @FXML
