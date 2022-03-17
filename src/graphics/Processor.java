@@ -1,5 +1,6 @@
 package graphics;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -27,6 +28,7 @@ public class Processor implements Runnable{
     }
 
     public void run() {
+        /*
         for (int i = 0; i < 10; i++) {
             storage.treatment();
             Map<String, Double> map = new HashMap<String, Double>();
@@ -38,5 +40,29 @@ public class Processor implements Runnable{
                 ex.printStackTrace();
             }
         }
+         */
+        Task<Integer> task = new Task<Integer>(){
+            @Override protected Integer call() throws Exception{
+                int iterations;
+                Storage storage = new Storage();
+                for(iterations = 0;iterations<100;iterations++){
+                    if(isCancelled()){
+                        break;
+                    }
+                    storage.treatment();
+                    Map<String, Double> map = new HashMap<String, Double>();
+                    series.getData().add(new XYChart.Data(iterations,map.get("getSystemCpuLoad")*100));
+                    lineChart.getData().addAll(series);
+                    try{
+                        Thread.sleep(100);
+                    }catch (InterruptedException ex){
+                        if(isCancelled()){
+                            break;
+                        }
+                    }
+                }
+                return iterations;
+            }
+        };
     }
 }

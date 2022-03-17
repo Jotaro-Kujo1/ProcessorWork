@@ -47,7 +47,6 @@ public class Storage {
                     value = e;
                 } // try
                 System.out.println(method.getName() + " = " + value);
-
             }
         }
     }

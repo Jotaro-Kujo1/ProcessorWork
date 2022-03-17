@@ -1,9 +1,7 @@
 package controllers;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
@@ -11,8 +9,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import graphics.Processor;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,6 +34,8 @@ public class ProcessorStateController implements ToPane {
 
     private Map<String, Long> myLongMap = new HashMap<String, Long>();
     private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
+    private List<Double> myList = new ArrayList<>();
+    private int iteration;
     @FXML
     private ResourceBundle resources;
 
@@ -76,14 +78,54 @@ public class ProcessorStateController implements ToPane {
         } catch (SigarException ex) {
             ex.printStackTrace();
         }
+        lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
+
+
+        Storage storage = new Storage();
+
+        /*
+        XYChart.Series series = new XYChart.Series();
+        series.getData().add(new XYChart.Data("1",23));
+        series.getData().add(new XYChart.Data("2",33));
+        series.getData().add(new XYChart.Data("3",43));
+        series.getData().add(new XYChart.Data("4",53));
+        series.getData().add(new XYChart.Data("5",63));
+        series.getData().add(new XYChart.Data("6",73));
+        lineChart.getData().add(series);
+        */
+
 
         XYChart.Series series = new XYChart.Series();
 
-        Processor processor = new Processor(new Storage(), lineChart, series);
-        new Thread(processor).start();
 
-        //myLongMap = storage.getMyLongMap();
-        //myDoubleMap = storage.getMyDoubleMap();
+
+        iteration=0;
+        Runnable r1 = () -> {
+            try{
+                for(iteration=0;iteration<1000;iteration++){
+                    storage.treatment();
+                    myDoubleMap = storage.getMyDoubleMap();
+
+                    //series.getData().add(new XYChart.Data(Integer.toString(i), myDoubleMap.get("getSystemCpuLoad") * 100));
+                    //lineChart.getData().addAll(series);
+                    //Platform.runLater(() -> lineChart.getData().add(series));
+                    Platform.runLater(()->{
+                        series.getData().add(new XYChart.Data(Integer.toString(iteration), myDoubleMap.get("getSystemCpuLoad") * 100));
+                        lineChart.getData().addAll(series);
+                    });
+                }
+                //Platform.runLater(() -> lineChart.getData().add(series));
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        };
+
+
+
+        Thread th1 = new Thread(r1);
+        //th1.setPriority(5);
+        th1.start();
 
 
 
