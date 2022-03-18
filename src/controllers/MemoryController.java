@@ -1,7 +1,11 @@
 package controllers;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -13,8 +17,14 @@ import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.Swap;
+import recourses.Storage;
 
 public class MemoryController implements ToPane{
+
+    private Map<String, Long> myLongMap = new HashMap<String, Long>();
+    private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
+    private int iteration;
+    private boolean flag = false;
 
     @FXML
     private ResourceBundle resources;
@@ -47,6 +57,12 @@ public class MemoryController implements ToPane{
     private NumberAxis y;
 
     @FXML
+    private Button startButton;
+
+    @FXML
+    private Button stopButton;
+
+    @FXML
     void initialize() {
         try {
             Sigar sigar = new Sigar();
@@ -66,6 +82,50 @@ public class MemoryController implements ToPane{
         }catch (SigarException ex){
             ex.printStackTrace();
         }
+
+        lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
+
+        startButton.setOnMouseEntered(event -> {
+            startButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #FF6347;"));
+        startButton.setOnAction(event -> {
+            lineChart.getData().clear();
+            Storage storage = new Storage();
+            XYChart.Series series = new XYChart.Series();
+            iteration=0;
+            flag = true;
+            Runnable r1 = () -> {
+                try{
+                    while(flag){
+                        storage.treatment();
+                        myLongMap = storage.getMyLongMap();
+                        Platform.runLater(()->{
+                            Long tmp = (myLongMap.get("getFreePhysicalMemorySize") * 100) / myLongMap.get("getTotalPhysicalMemorySize");
+                            series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp));
+                            lineChart.getData().addAll(series);
+                        });
+                        iteration++;
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            };
+            Thread th1 = new Thread(r1);
+            th1.start();
+
+        });
+
+
+        stopButton.setOnMouseEntered(event -> {
+            stopButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        stopButton.setOnMouseExited(event -> stopButton.setStyle("-fx-background-color: #FF6347;"));
+        stopButton.setOnAction(event -> {
+            flag = false;
+        });
+
 
 
 

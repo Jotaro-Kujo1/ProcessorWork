@@ -46,7 +46,7 @@ public class Storage {
                 } catch (Exception e) {
                     value = e;
                 } // try
-                System.out.println(method.getName() + " = " + value);
+                //System.out.println(method.getName() + " = " + value);
             }
         }
     }
