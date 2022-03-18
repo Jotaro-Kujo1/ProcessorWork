@@ -118,56 +118,6 @@ public class ProcessorStateController implements ToPane {
         });
 
 
-        //Storage storage = new Storage();
-
-        /*
-        XYChart.Series series = new XYChart.Series();
-        series.getData().add(new XYChart.Data("1",23));
-        series.getData().add(new XYChart.Data("2",33));
-        series.getData().add(new XYChart.Data("3",43));
-        series.getData().add(new XYChart.Data("4",53));
-        series.getData().add(new XYChart.Data("5",63));
-        series.getData().add(new XYChart.Data("6",73));
-        lineChart.getData().add(series);
-        */
-
-
-        /*
-        XYChart.Series series = new XYChart.Series();
-
-
-
-        iteration=0;
-        Runnable r1 = () -> {
-            try{
-                for(iteration=0;iteration<500;iteration++){
-                    storage.treatment();
-                    myDoubleMap = storage.getMyDoubleMap();
-
-                    //series.getData().add(new XYChart.Data(Integer.toString(i), myDoubleMap.get("getSystemCpuLoad") * 100));
-                    //lineChart.getData().addAll(series);
-                    //Platform.runLater(() -> lineChart.getData().add(series));
-                    Platform.runLater(()->{
-                        series.getData().add(new XYChart.Data(Integer.toString(iteration), myDoubleMap.get("getSystemCpuLoad") * 100));
-                        lineChart.getData().addAll(series);
-                    });
-                }
-                //Platform.runLater(() -> lineChart.getData().add(series));
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-        };
-
-
-
-        Thread th1 = new Thread(r1);
-        //th1.setPriority(5);
-        th1.start();
-
-
-         */
-
-
         backButton.setOnMouseEntered(event -> {
             backButton.setStyle("-fx-background-color: #FF7F50;");
         });

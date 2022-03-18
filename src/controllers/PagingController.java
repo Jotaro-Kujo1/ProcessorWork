@@ -1,13 +1,27 @@
 package controllers;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.hyperic.sigar.*;
+import recourses.Storage;
 
 public class PagingController implements ToPane{
+
+    private Map<String, Long> myLongMap = new HashMap<String, Long>();
+    private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
+    private int iteration;
+    private boolean flag = false;
 
     @FXML
     private ResourceBundle resources;
@@ -28,31 +42,80 @@ public class PagingController implements ToPane{
     private Button backButton;
 
     @FXML
+    private LineChart<Number, Number> lineChart;
+
+    @FXML
+    private CategoryAxis x;
+
+    @FXML
+    private NumberAxis y;
+
+    @FXML
+    private Button startButton;
+
+    @FXML
+    private Button stopButton;
+
+
+    @FXML
     void initialize() {
         try {
             Sigar sigar = new Sigar();
             Mem mem = sigar.getMem();
             Swap swap = sigar.getSwap();
-
-
-            ResourceLimit rLimit = sigar.getResourceLimit();
-            System.out.println(rLimit.getMemoryMax());
-            System.out.println(rLimit.getVirtualMemoryMax() / 1024L / 1024L);
-            System.out.println(rLimit.getCpuMax());
-            System.out.println(rLimit.getStackMax());
-            System.out.println(rLimit.getOpenFilesMax());
-            System.out.println(rLimit.getMemoryCur());
-            System.out.println(rLimit.getVirtualMemoryCur());
-            System.out.println(rLimit.getFileSizeMax());
-            System.out.println(rLimit.getPipeSizeCur());
-
-
-
-            allSwap.setText(Long.toString((swap.getTotal() - mem.getTotal())/1024L/1024L) + " Мбайт всего ");
-            usedSwap.setText(Long.toString(swap.getPageOut() / 1024L / 1024L) + " Мбайт использовано ");
+            Storage storage = new Storage();
+            storage.treatment();
+            myLongMap = storage.getMyLongMap();
+            allSwap.setText(Long.toString((myLongMap.get("getFreeSwapSpaceSize") + myLongMap.get("getCommittedVirtualMemorySize"))/1024L/1024L) + " Мбайт всего ");
+            usedSwap.setText(Long.toString(myLongMap.get("getCommittedVirtualMemorySize")/1024L/1024L) + " Мбайт занято ");
+            //allSwap.setText(Long.toString((swap.getTotal() - mem.getTotal())/1024L/1024L) + " Мбайт всего ");
+            //usedSwap.setText(Long.toString(swap.getPageOut() / 1024L / 1024L) + " Мбайт использовано ");
         }catch (SigarException ex){
             ex.printStackTrace();
         }
+
+
+        lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
+
+        startButton.setOnMouseEntered(event -> {
+            startButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        startButton.setOnMouseExited(event -> startButton.setStyle("-fx-background-color: #FF6347;"));
+        startButton.setOnAction(event -> {
+            lineChart.getData().clear();
+            Storage storage = new Storage();
+            XYChart.Series series = new XYChart.Series();
+            iteration=0;
+            flag = true;
+            Runnable r1 = () -> {
+                try{
+                    while(flag){
+                        storage.treatment();
+                        myLongMap = storage.getMyLongMap();
+                        Platform.runLater(()->{
+                            Long tmp = ((myLongMap.get("getCommittedVirtualMemorySize")/1024L/1024L) * 100) / ((myLongMap.get("getFreeSwapSpaceSize") + myLongMap.get("getCommittedVirtualMemorySize"))/1024L/1024L);
+                            series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp));
+                            lineChart.getData().addAll(series);
+                        });
+                        iteration++;
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            };
+            Thread th1 = new Thread(r1);
+            th1.start();
+        });
+
+
+        stopButton.setOnMouseEntered(event -> {
+            stopButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        stopButton.setOnMouseExited(event -> stopButton.setStyle("-fx-background-color: #FF6347;"));
+        stopButton.setOnAction(event -> {
+            flag = false;
+        });
 
 
         backButton.setOnMouseEntered(event -> {
