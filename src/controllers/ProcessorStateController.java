@@ -1,5 +1,8 @@
 package controllers;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -20,6 +23,7 @@ import org.hyperic.sigar.CpuInfo;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import recourses.Storage;
+import sun.security.krb5.internal.crypto.Des;
 
 public class ProcessorStateController implements ToPane {
 
@@ -62,6 +66,10 @@ public class ProcessorStateController implements ToPane {
     private Button stopButton;
 
     @FXML
+    private Button openButton;
+
+
+    @FXML
     void initialize() {
         try {
             CpuInfo cpu = new Sigar().getCpuInfoList()[0];
@@ -91,14 +99,17 @@ public class ProcessorStateController implements ToPane {
             Runnable r1 = () -> {
                 try{
                     while(flag){
-                        storage.treatment();
-                        myDoubleMap = storage.getMyDoubleMap();
+                        if(iteration%10==0) {
+                            storage.treatment();
+                            myDoubleMap = storage.getMyDoubleMap();
 
-                        Platform.runLater(()->{
-                            series.getData().add(new XYChart.Data(Integer.toString(iteration), myDoubleMap.get("getSystemCpuLoad") * 100));
-                            lineChart.getData().addAll(series);
-                        });
-                        iteration++;
+                            Platform.runLater(() -> {
+                                series.getData().add(new XYChart.Data(Integer.toString(iteration), myDoubleMap.get("getSystemCpuLoad") * 100));
+                                lineChart.getData().addAll(series);
+                            });
+                        }
+                            iteration++;
+
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();
@@ -127,7 +138,20 @@ public class ProcessorStateController implements ToPane {
             toMainPane();
         });
 
-
+        openButton.setOnMouseEntered(event -> {
+            openButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        openButton.setOnMouseExited(event -> openButton.setStyle("-fx-background-color: #FF6347;"));
+        openButton.setOnAction(event -> {
+            Desktop desktop = null;
+            if(Desktop.isDesktopSupported()) desktop = Desktop.getDesktop();
+            try{
+                desktop.open(new File("C:/Users/bucel/Desktop/2 курс/ТА_РПЗ.docx"));
+                System.out.println("Opened");
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+        });
 
     }
 }

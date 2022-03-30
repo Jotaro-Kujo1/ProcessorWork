@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JavaFxApplication:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JavaFxApplication_jar</output-path>
+    <root id="archive" name="JavaFxApplication.jar">
+      <element id="module-output" name="JavaFxApplication" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../hyperic-sigar-1.6.4/sigar-bin/lib/log4j.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../hyperic-sigar-1.6.4/sigar-bin/lib/sigar.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
