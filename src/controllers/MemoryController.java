@@ -1,5 +1,8 @@
 package controllers;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +66,9 @@ public class MemoryController implements ToPane{
     private Button stopButton;
 
     @FXML
+    private Button openButton;
+
+    @FXML
     void initialize() {
         try {
             Sigar sigar = new Sigar();
@@ -74,8 +80,7 @@ public class MemoryController implements ToPane{
             allVirMem.setText(Long.toString(swap.getTotal() / 1024L / 1024L) + " Мбайт всего ");
             canUzeVirMem.setText(Long.toString((mem.getFree()+(swap.getTotal() - mem.getTotal() ))/ 1024L / 1024L) + " Мбайт свободно ");
 
-            System.out.println(swap.getPageIn()/1024L/124L);
-            System.out.println(swap.getPageOut());
+
 
 
 
@@ -99,13 +104,17 @@ public class MemoryController implements ToPane{
             Runnable r1 = () -> {
                 try{
                     while(flag){
-                        storage.treatment();
-                        myLongMap = storage.getMyLongMap();
-                        Platform.runLater(()->{
-                            Long tmp = (myLongMap.get("getFreePhysicalMemorySize") * 100) / myLongMap.get("getTotalPhysicalMemorySize");
-                            series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp));
-                            lineChart.getData().addAll(series);
-                        });
+                        if(iteration%10==0) {
+                            storage.treatment();
+                            myLongMap = storage.getMyLongMap();
+                            Platform.runLater(() -> {
+                                Long tmp = (myLongMap.get("getFreePhysicalMemorySize") * 100) / myLongMap.get("getTotalPhysicalMemorySize");
+                                series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp));
+                                if (!lineChart.getData().contains(series)) {
+                                    lineChart.getData().addAll(series);
+                                }
+                            });
+                        }
                         iteration++;
                     }
                 }catch (Exception ex){
@@ -136,6 +145,21 @@ public class MemoryController implements ToPane{
         backButton.setOnAction(event -> {
             backButton.getScene().getWindow().hide();
             toMainPane();
+        });
+
+        openButton.setOnMouseEntered(event -> {
+            openButton.setStyle("-fx-background-color: #FF7F50;");
+        });
+        openButton.setOnMouseExited(event -> openButton.setStyle("-fx-background-color: #FF6347;"));
+        openButton.setOnAction(event -> {
+            Desktop desktop = null;
+            if(Desktop.isDesktopSupported()) desktop = Desktop.getDesktop();
+            try{
+                desktop.open(new File("C:/Users/bucel/Desktop/2 курс/ТА_РПЗ.docx"));
+                System.out.println("Opened");
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
         });
     }
 }

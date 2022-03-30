@@ -29,6 +29,7 @@ public class ProcessorStateController implements ToPane {
 
     private Map<String, Long> myLongMap = new HashMap<String, Long>();
     private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
+    private Double tmp;
     private int iteration;
     private boolean flag = false;
     @FXML
@@ -105,7 +106,10 @@ public class ProcessorStateController implements ToPane {
 
                             Platform.runLater(() -> {
                                 series.getData().add(new XYChart.Data(Integer.toString(iteration), myDoubleMap.get("getSystemCpuLoad") * 100));
-                                lineChart.getData().addAll(series);
+                                if(!lineChart.getData().contains(series)){
+                                    lineChart.getData().addAll(series);
+                                }
+                                //lineChart.getData().addAll(series);
                             });
                         }
                             iteration++;

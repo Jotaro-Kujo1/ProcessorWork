@@ -1,5 +1,8 @@
 package controllers;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class PagingController implements ToPane{
     private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
     private int iteration;
     private boolean flag = false;
+
 
     @FXML
     private ResourceBundle resources;
@@ -66,10 +70,10 @@ public class PagingController implements ToPane{
             Storage storage = new Storage();
             storage.treatment();
             myLongMap = storage.getMyLongMap();
-            allSwap.setText(Long.toString((myLongMap.get("getFreeSwapSpaceSize") + myLongMap.get("getCommittedVirtualMemorySize"))/1024L/1024L) + " Мбайт всего ");
+            allSwap.setText(Long.toString((swap.getTotal() - mem.getTotal()) / 1024L / 1024L) + " Мбайт всего ");
+
             usedSwap.setText(Long.toString(myLongMap.get("getCommittedVirtualMemorySize")/1024L/1024L) + " Мбайт занято ");
-            //allSwap.setText(Long.toString((swap.getTotal() - mem.getTotal())/1024L/1024L) + " Мбайт всего ");
-            //usedSwap.setText(Long.toString(swap.getPageOut() / 1024L / 1024L) + " Мбайт использовано ");
+
         }catch (SigarException ex){
             ex.printStackTrace();
         }
@@ -90,14 +94,24 @@ public class PagingController implements ToPane{
             flag = true;
             Runnable r1 = () -> {
                 try{
+                    Sigar sigar = new Sigar();
+                    Mem mem = sigar.getMem();
+                    Swap swap = sigar.getSwap();
                     while(flag){
-                        storage.treatment();
-                        myLongMap = storage.getMyLongMap();
-                        Platform.runLater(()->{
-                            Long tmp = ((myLongMap.get("getCommittedVirtualMemorySize")/1024L/1024L) * 100) / ((myLongMap.get("getFreeSwapSpaceSize") + myLongMap.get("getCommittedVirtualMemorySize"))/1024L/1024L);
-                            series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp));
-                            lineChart.getData().addAll(series);
-                        });
+                        if(iteration%10==0) {
+                            storage.treatment();
+                            myLongMap = storage.getMyLongMap();
+                            Platform.runLater(() -> {
+                                //Long tmp = (((myLongMap.get("getCommittedVirtualMemorySize") / 1024L / 1024L)) / ((swap.getTotal() - mem.getTotal()) / 1024L / 1024L))*100;
+                                Long tmp = (swap.getTotal() - mem.getTotal()) / 1024L / 1024L;
+                                Long tmp1 = myLongMap.get("getCommittedVirtualMemorySize") / 1024L / 1024L;
+                                Long tmp2 = ((tmp1 * 10) / tmp) * 100 / 10;
+                                series.getData().add(new XYChart.Data(Integer.toString(iteration), tmp2));
+                                if (!lineChart.getData().contains(series)) {
+                                    lineChart.getData().addAll(series);
+                                }
+                            });
+                        }
                         iteration++;
                     }
                 }catch (Exception ex){
@@ -126,5 +140,6 @@ public class PagingController implements ToPane{
             backButton.getScene().getWindow().hide();
             toMainPane();
         });
+
     }
 }

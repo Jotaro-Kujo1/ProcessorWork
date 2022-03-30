@@ -10,6 +10,7 @@ import java.util.Map;
 public class Storage {
     private Map<String, Long> myLongMap = new HashMap<String, Long>();
     private Map <String, Double> myDoubleMap = new HashMap <String, Double> ();
+    private Double a;
 
     public Map<String, Long> getMyLongMap() {
         return myLongMap;
@@ -25,6 +26,10 @@ public class Storage {
 
     public void setMyDoubleMap(Map<String, Double> myDoubleMap) {
         this.myDoubleMap = myDoubleMap;
+    }
+
+    public Double getA() {
+        return a;
     }
 
     public void treatment(){
@@ -49,5 +54,7 @@ public class Storage {
                 //System.out.println(method.getName() + " = " + value);
             }
         }
+
     }
+
 }
