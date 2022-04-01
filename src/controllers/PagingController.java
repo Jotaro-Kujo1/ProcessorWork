@@ -113,6 +113,7 @@ public class PagingController implements ToPane{
                             });
                         }
                         iteration++;
+                        Thread.sleep(100);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();

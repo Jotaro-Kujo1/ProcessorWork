@@ -46,10 +46,5 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="openButton" layoutX="725.0" layoutY="182.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="220.0" style="-fx-background-color: #FF6347;" text="Открыть файл">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
    </children>
 </AnchorPane>

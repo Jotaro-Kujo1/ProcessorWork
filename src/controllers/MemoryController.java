@@ -116,6 +116,7 @@ public class MemoryController implements ToPane{
                             });
                         }
                         iteration++;
+                        Thread.sleep(100);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();

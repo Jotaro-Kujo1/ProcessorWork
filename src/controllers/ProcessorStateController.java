@@ -113,7 +113,7 @@ public class ProcessorStateController implements ToPane {
                             });
                         }
                             iteration++;
-
+                            Thread.sleep(100);
                     }
                 }catch (Exception ex){
                     ex.printStackTrace();
@@ -150,7 +150,7 @@ public class ProcessorStateController implements ToPane {
             Desktop desktop = null;
             if(Desktop.isDesktopSupported()) desktop = Desktop.getDesktop();
             try{
-                desktop.open(new File("C:/Users/bucel/Desktop/2 курс/ТА_РПЗ.docx"));
+                desktop.open(new File("C:/Users/bucel/Desktop/2 курс/ТА_РПЗ.docx")); //Сменить путь когда буду сдавать
                 System.out.println("Opened");
             }catch (IOException ex){
                 ex.printStackTrace();
